@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:multiple_dropdown_firebase/constants.dart';
+import 'package:multiple_dropdown_firebase/homescreen.dart';
 
 class MyAccount extends StatelessWidget {
   MyAccount({super.key});
@@ -29,10 +30,14 @@ class MyAccount extends StatelessWidget {
       actions: <Widget>[
         IconButton(
           icon: const Icon(
-            Icons.home,
-            color: kTextColor,
+            Icons.home, size: 35,
+            color: Colors.orange,
           ),
-          onPressed: () {},
+          onPressed: () {
+            Navigator.of(context).push(MaterialPageRoute(
+                    builder: (context) => MyHomePage(),
+                  ));
+          },
         ),
         const SizedBox(width: kDefaultPaddin / 2),
       ],
@@ -46,32 +51,57 @@ class MyAccount extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.grey[200],
       appBar: buildAppBar(context),
       body: Padding(
-        padding: const EdgeInsets.only(top: 40, left: 8, right: 8),
+        padding: const EdgeInsets.only(top: 40, left: 10, right: 10),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             Center(
                 child: Icon(
               Icons.account_circle,
-              color: Colors.grey[500],
+              color: Colors.orange[300],
               size: 150,
             )),
             sizedbox,
-            CardButton(text: 'My Account', buttonAction: () {
-              log('message');
-            }, icon: Icons.account_circle,),
+            CardButton(
+              text: 'My Account',
+              buttonAction: () {
+                log('message');
+              },
+              icon: Icons.account_circle,
+            ),
             sizedbox,
-            CardButton(text: 'Notifications', buttonAction: () {}, icon: Icons.notifications,),
+            CardButton(
+              text: 'Notifications',
+              buttonAction: () {},
+              icon: Icons.notifications,
+            ),
             sizedbox,
-           CardButton(text: 'My Orders', buttonAction: () {}, icon: Icons.shopping_cart,),
+            CardButton(
+              text: 'My Orders',
+              buttonAction: () {},
+              icon: Icons.shopping_cart,
+            ),
             sizedbox,
-           CardButton(text: 'Settings', buttonAction: () {}, icon: Icons.settings,),
+            CardButton(
+              text: 'Settings',
+              buttonAction: () {},
+              icon: Icons.settings,
+            ),
             sizedbox,
-           CardButton(text: 'Help Center', buttonAction: () {}, icon: Icons.help_center,),
+            CardButton(
+              text: 'Help Center',
+              buttonAction: () {},
+              icon: Icons.help_center,
+            ),
             sizedbox,
-            CardButton(text: 'Log out', buttonAction: () {}, icon: Icons.logout_rounded,),
+            CardButton(
+              text: 'Log out',
+              buttonAction: () {},
+              icon: Icons.logout_rounded,
+            ),
           ],
         ),
       ),
@@ -79,33 +109,41 @@ class MyAccount extends StatelessWidget {
   }
 }
 
+
+
 class CardButton extends StatelessWidget {
-  CardButton({required this.text, required this.buttonAction, required this.icon});
+  CardButton(
+      {required this.text, required this.buttonAction, required this.icon});
   final String text;
   final void Function() buttonAction;
-  final  IconData icon;
+  final IconData icon;
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: buttonAction,
       child: Card(
+        color: Colors.white,
         child: Padding(
           padding: const EdgeInsets.all(15.0),
           child: Row(
             children: [
-              Icon(icon, color: Colors.white,),
-              SizedBox(width: 10,),
+              Icon(
+                icon,
+                color: Colors.orange,
+              ),
+              const SizedBox(
+                width: 10,
+              ),
               Text(
                 text,
-                style: TextStyle(
-                  color: Colors.white,
+                style: const TextStyle(
+                  color: Colors.black,
                 ),
               ),
             ],
           ),
         ),
-        color: Colors.orange[500],
       ),
     );
   }
