@@ -421,7 +421,7 @@ class _PaymentPageState extends State<PaymentPage> {
                   Navigator.of(context).pop();
 
                   String payMethod = (method == PaymentMethod.online)
-                      ? 'debit card'
+                      ? 'online'
                       : 'cash on delivery';
 
                   CollectionReference orderRef =
