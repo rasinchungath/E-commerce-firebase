@@ -8,8 +8,7 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:razorpay_flutter/razorpay_flutter.dart';
 import 'package:http/http.dart' as http;
-import 'razid.dart'as razorCredentials;
-
+import 'razid.dart' as razorCredentials;
 
 enum PaymentMethod { cashondelivery, debitcard, upi, wallet }
 
@@ -25,7 +24,7 @@ class PaymentPage extends StatefulWidget {
 class _PaymentPageState extends State<PaymentPage> {
   Cart cart = Cart();
   int deliverycharge = 40;
-   final _razorpay = Razorpay();
+  final _razorpay = Razorpay();
 
   @override
   void initState() {
@@ -81,7 +80,7 @@ class _PaymentPageState extends State<PaymentPage> {
     };
     var res = await http.post(
       Uri.https(
-          "api.razorpay.com", "v1/orders"), //https://api.razorpay.com/v1/orders
+          "api.razorpay.com", "v1/orders"), 
       headers: <String, String>{
         "Content-Type": "application/json",
         'authorization': basicAuth,
@@ -151,12 +150,11 @@ class _PaymentPageState extends State<PaymentPage> {
 
   @override
   void dispose() {
-    _razorpay.clear(); 
+    _razorpay.clear();
     // Removes all listeners
 
     super.dispose();
   }
-
 
   AppBar buildAppBar(BuildContext context) {
     return AppBar(
@@ -387,7 +385,6 @@ class _PaymentPageState extends State<PaymentPage> {
                   ),
                   onPressed: () {
                     showAlertDialog(context);
-                   
                   },
                   child: const Text(
                     'Confirm',
@@ -420,47 +417,45 @@ class _PaymentPageState extends State<PaymentPage> {
           actions: [
             TextButton(
                 onPressed: () {
-                   createOrder();
-                   Navigator.of(context).pop();
+                  createOrder();
+                  Navigator.of(context).pop();
 
-                    String payMethod = (method == PaymentMethod.debitcard)
-                        ? 'debit card'
-                        : 'cash on delivery';
+                  String payMethod = (method == PaymentMethod.debitcard)
+                      ? 'debit card'
+                      : 'cash on delivery';
 
-                    CollectionReference orderRef =
-                        FirebaseFirestore.instance.collection('order');
-                    CollectionReference orderdetailsRef =
-                        FirebaseFirestore.instance.collection('orderdetails');
+                  CollectionReference orderRef =
+                      FirebaseFirestore.instance.collection('order');
+                  CollectionReference orderdetailsRef =
+                      FirebaseFirestore.instance.collection('orderdetails');
 
-                    final docId = orderRef.doc().id;
-                    
-                    var formattedDate = DateFormat('dd-MM-yyyy').format(DateTime.now()); 
-                        
+                  final docId = orderRef.doc().id;
 
-                    orderRef.doc(docId).set({
-                      'name': widget.name,
-                      'order total': context.read<Cart>().totalPrice,
-                      'delivery charge': deliverycharge,
-                      'address': widget.adress,
+                  var formattedDate =
+                      DateFormat('dd-MM-yyyy').format(DateTime.now());
+
+                  orderRef.doc(docId).set({
+                    'name': widget.name,
+                    'order total': context.read<Cart>().totalPrice,
+                    'delivery charge': deliverycharge,
+                    'address': widget.adress,
+                    'orderid': docId,
+                    'order date': formattedDate,
+                    'payment method': payMethod,
+                    'Total amount':
+                        context.read<Cart>().totalPrice + deliverycharge,
+                  });
+                  for (var item in context.read<Cart>().getItems) {
+                    orderdetailsRef.doc().set({
                       'orderid': docId,
-                      'order date': formattedDate,
+                      'item id': item.id,
+                      'itemname': item.name,
+                      'itemimage': item.image,
+                      'orderqty': item.qty,
+                      'orderprice': item.qty * item.price,
                       'payment method': payMethod,
-                      'Total amount':
-                          context.read<Cart>().totalPrice + deliverycharge,
                     });
-                    for (var item in context.read<Cart>().getItems) {
-                      orderdetailsRef.doc().set({
-                        'orderid': docId,
-                        'item id': item.id,
-                        'itemname': item.name,
-                        'itemimage': item.image,
-                        'orderqty': item.qty,
-                        'orderprice': item.qty * item.price,
-                        'payment method': payMethod,
-                      });
-                    }
-                  
-                
+                  }
                 },
                 child: Text(
                   'Ok',
@@ -480,6 +475,7 @@ class _PaymentPageState extends State<PaymentPage> {
     );
   }
 }
+
 class MyHttpOverrides extends HttpOverrides {
   @override
   HttpClient createHttpClient(SecurityContext? context) {
