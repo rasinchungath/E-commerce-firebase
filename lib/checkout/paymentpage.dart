@@ -10,7 +10,7 @@ import 'package:razorpay_flutter/razorpay_flutter.dart';
 import 'package:http/http.dart' as http;
 import 'razid.dart' as razorCredentials;
 
-enum PaymentMethod { cashondelivery, debitcard, upi, wallet }
+enum PaymentMethod { cashondelivery, online, upi, wallet }
 
 class PaymentPage extends StatefulWidget {
   PaymentPage(
@@ -292,11 +292,11 @@ class _PaymentPageState extends State<PaymentPage> {
                       subtitle: const Text('Pay at the time of delivery'),
                     ),
                     ListTile(
-                      title: const Text('Debit Card'),
+                      title: const Text('Online payment'),
                       leading: Radio(
                         fillColor: MaterialStateColor.resolveWith(
                             (states) => Colors.orange.shade500),
-                        value: PaymentMethod.debitcard,
+                        value: PaymentMethod.online,
                         groupValue: method,
                         onChanged: (PaymentMethod? value) {
                           setState(() {
@@ -406,12 +406,12 @@ class _PaymentPageState extends State<PaymentPage> {
             borderRadius: BorderRadius.circular(15),
           ),
           title: Text(
-            (method == PaymentMethod.debitcard)
+            (method == PaymentMethod.online)
                 ? "Debit card"
                 : 'Cash on delivery',
             style: TextStyle(color: Colors.orange[500]),
           ),
-          content: Text((method == PaymentMethod.debitcard)
+          content: Text((method == PaymentMethod.online)
               ? "Continue to pay using debit card"
               : 'Continue to pay cash on delivery'),
           actions: [
@@ -420,7 +420,7 @@ class _PaymentPageState extends State<PaymentPage> {
                   createOrder();
                   Navigator.of(context).pop();
 
-                  String payMethod = (method == PaymentMethod.debitcard)
+                  String payMethod = (method == PaymentMethod.online)
                       ? 'debit card'
                       : 'cash on delivery';
 
