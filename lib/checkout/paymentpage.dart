@@ -38,22 +38,25 @@ class _PaymentPageState extends State<PaymentPage> {
 
   void _handlePaymentSuccess(PaymentSuccessResponse response) {
     // Do something when payment succeeds
-    print(response);
+   
     verifySignature(
       signature: response.signature,
       paymentId: response.paymentId,
       orderId: response.orderId,
     );
+     log("successs id===" + response.paymentId.toString());
+    firebaseData('order successfull');
   }
 
   void _handlePaymentError(PaymentFailureResponse response) {
-    print(response);
     // Do something when payment fails
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(response.message ?? ''),
       ),
     );
+    firebaseData('order failed');
+    log(response.toString());
   }
 
   void _handleExternalWallet(ExternalWalletResponse response) {
@@ -79,8 +82,7 @@ class _PaymentPageState extends State<PaymentPage> {
       "receipt": "rcptid_11"
     };
     var res = await http.post(
-      Uri.https(
-          "api.razorpay.com", "v1/orders"), 
+      Uri.https("api.razorpay.com", "v1/orders"),
       headers: <String, String>{
         "Content-Type": "application/json",
         'authorization': basicAuth,
@@ -96,18 +98,23 @@ class _PaymentPageState extends State<PaymentPage> {
 
   openGateway(String orderId) {
     var options = {
-      'key': razorCredentials.keyId,
-      'amount': 100, //in the smallest currency sub-unit.
-      'name': 'Acme Corp.',
-      'order_id': orderId, // Generate order_id using Orders API
-      'description': 'I Phone 14',
-      'timeout': 60 * 5, // in seconds // 5 minutes
-      'prefill': {
-        'contact': '919657668899',
-        'email': 'ary@example.com',
-      }
+      "key": "rzp_test_VsMPAOYw5nXeYv",
+      "amount": 10 * 100,
+      'name': "ssssss",
+      'currency': 'INR',
+      'description': 'ecommerce heavy',
+      'external': {
+        'wallets': ['paytm']
+      },
+      'retry': {'enabled': true, 'max_count': 1},
+      'send_sms_hash': true,
+      "prefill": {"contact": "9633970499", "email": "dilajbar123@gmail.com"},
     };
-    _razorpay.open(options);
+    try {
+      _razorpay.open(options);
+    } catch (e) {
+      debugPrint('Error: e');
+    }
   }
 
   verifySignature({
@@ -397,6 +404,46 @@ class _PaymentPageState extends State<PaymentPage> {
     );
   }
 
+  firebaseData(String paymentStatus) {
+    
+    String payMethod =
+        (method == PaymentMethod.online) ? 'online' : 'cash on delivery';
+
+    CollectionReference orderRef =
+        FirebaseFirestore.instance.collection('order');
+    CollectionReference orderdetailsRef =
+        FirebaseFirestore.instance.collection('orderdetails');
+
+    final docId = orderRef.doc().id;
+
+    var formattedDate = DateFormat('dd-MM-yyyy').format(DateTime.now());
+
+    orderRef.doc(docId).set({
+      'name': widget.name,
+      'order total': context.read<Cart>().totalPrice,
+      'delivery charge': deliverycharge,
+      'address': widget.adress,
+      'orderid': docId,
+      'order date': formattedDate,
+      'payment method': payMethod,
+      'Total amount': context.read<Cart>().totalPrice + deliverycharge,
+      'Order status': paymentStatus,
+    });
+
+    for (var item in context.read<Cart>().getItems) {
+      orderdetailsRef.doc().set({
+        'orderid': docId,
+        'item id': item.id,
+        'itemname': item.name,
+        'itemimage': item.image,
+        'orderqty': item.qty,
+        'orderprice': item.qty * item.price,
+        'payment method': payMethod,
+        'Order status': paymentStatus,
+      });
+    }
+  }
+
   showAlertDialog(BuildContext context) {
     showDialog(
       context: context,
@@ -417,45 +464,17 @@ class _PaymentPageState extends State<PaymentPage> {
           actions: [
             TextButton(
                 onPressed: () {
-                  createOrder();
-                  Navigator.of(context).pop();
-
-                  String payMethod = (method == PaymentMethod.online)
-                      ? 'online'
-                      : 'cash on delivery';
-
-                  CollectionReference orderRef =
-                      FirebaseFirestore.instance.collection('order');
-                  CollectionReference orderdetailsRef =
-                      FirebaseFirestore.instance.collection('orderdetails');
-
-                  final docId = orderRef.doc().id;
-
-                  var formattedDate =
-                      DateFormat('dd-MM-yyyy').format(DateTime.now());
-
-                  orderRef.doc(docId).set({
-                    'name': widget.name,
-                    'order total': context.read<Cart>().totalPrice,
-                    'delivery charge': deliverycharge,
-                    'address': widget.adress,
-                    'orderid': docId,
-                    'order date': formattedDate,
-                    'payment method': payMethod,
-                    'Total amount':
-                        context.read<Cart>().totalPrice + deliverycharge,
-                  });
-                  for (var item in context.read<Cart>().getItems) {
-                    orderdetailsRef.doc().set({
-                      'orderid': docId,
-                      'item id': item.id,
-                      'itemname': item.name,
-                      'itemimage': item.image,
-                      'orderqty': item.qty,
-                      'orderprice': item.qty * item.price,
-                      'payment method': payMethod,
-                    });
+                  if (method == PaymentMethod.cashondelivery) {
+                    firebaseData('order successfull');
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content: Text('order successfully placed'),
+                      ),
+                    );
+                  } else {
+                    createOrder();
                   }
+                  Navigator.of(context).pop();
                 },
                 child: Text(
                   'Ok',
