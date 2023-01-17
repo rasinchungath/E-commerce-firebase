@@ -4,6 +4,8 @@ import 'package:multiple_dropdown_firebase/constants.dart';
 import 'package:multiple_dropdown_firebase/model/product_class.dart';
 import 'package:provider/provider.dart';
 
+import '../My account/account_page.dart';
+
 class CartView extends StatelessWidget {
   CartView({super.key});
   Cart cart = Cart();
@@ -37,7 +39,11 @@ class CartView extends StatelessWidget {
             Icons.account_circle,
             color: kTextColor,
           ),
-          onPressed: () {},
+          onPressed: () {
+            Navigator.of(context).push(MaterialPageRoute(
+                    builder: (context) => MyAccount(),
+                  ));
+          },
         ),
         const SizedBox(width: kDefaultPaddin / 2),
       ],

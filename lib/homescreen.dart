@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:multiple_dropdown_firebase/My%20account/account_page.dart';
 import 'package:multiple_dropdown_firebase/constants.dart';
 import 'package:multiple_dropdown_firebase/productview.dart';
 import 'package:multiple_dropdown_firebase/shoppingcart/cart.dart';
@@ -27,13 +28,13 @@ class _MyHomePageState extends State<MyHomePage> {
       ),
       actions: <Widget>[
         IconButton(
-          icon:const Icon(Icons.search, color: kTextColor,),
+          icon:const Icon(Icons.account_circle, color: kTextColor,),
           
           
           onPressed: () { 
-            //  Navigator.of(context).push(MaterialPageRoute(
-            //         builder: (context) => CartViewDesign(),
-            //       ));
+             Navigator.of(context).push(MaterialPageRoute(
+                    builder: (context) => MyAccount(),
+                  ));
           },
         ),
         IconButton(
