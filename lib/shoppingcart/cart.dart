@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:multiple_dropdown_firebase/checkout/address.dart';
-import 'package:multiple_dropdown_firebase/constants.dart';
 import 'package:multiple_dropdown_firebase/model/product_class.dart';
+import 'package:multiple_dropdown_firebase/widgets/appbar.dart';
 import 'package:provider/provider.dart';
 
 import '../My account/account_page.dart';
@@ -10,50 +10,61 @@ class CartView extends StatelessWidget {
   CartView({super.key});
   Cart cart = Cart();
 
-  AppBar buildAppBar(BuildContext context) {
-    return AppBar(
-      backgroundColor: Colors.white,
-      elevation: 0,
-      leading: IconButton(
-        icon: const Icon(
-          Icons.arrow_back,
-          color: kTextColor,
-        ),
-        onPressed: () {
-          Navigator.of(context).pop();
-        },
-      ),
-      actions: <Widget>[
-        IconButton(
-          icon: 
-          const Icon(
-            Icons.delete,
-            color: kTextColor,
-          ),
-          onPressed: () {
-            context.read<Cart>().clearCart();
-          },
-        ),
-        IconButton(
-          icon: const Icon(
-            Icons.account_circle,
-            color: kTextColor,
-          ),
-          onPressed: () {
-            Navigator.of(context).push(MaterialPageRoute(
-                    builder: (context) => MyAccount(),
-                  ));
-          },
-        ),
-        const SizedBox(width: kDefaultPaddin / 2),
-      ],
-    );
-  }
+  // AppBar buildAppBar(BuildContext context) {
+  //   return AppBar(
+  //     backgroundColor: Colors.white,
+  //     elevation: 0,
+  //     leading: IconButton(
+  //       icon: const Icon(
+  //         Icons.arrow_back,
+  //         color: kTextColor,
+  //       ),
+  //       onPressed: () {
+  //         Navigator.of(context).pop();
+  //       },
+  //     ),
+  //     actions: <Widget>[
+  //       IconButton(
+  //         icon: 
+  //         const Icon(
+  //           Icons.delete,
+  //           color: kTextColor,
+  //         ),
+  //         onPressed: () {
+  //           context.read<Cart>().clearCart();
+  //         },
+  //       ),
+  //       IconButton(
+  //         icon: const Icon(
+  //           Icons.account_circle,
+  //           color: kTextColor,
+  //         ),
+  //         onPressed: () {
+  //           Navigator.of(context).push(MaterialPageRoute(
+  //                   builder: (context) => MyAccount(),
+  //                 ));
+  //         },
+  //       ),
+  //       const SizedBox(width: kDefaultPaddin / 2),
+  //     ],
+  //   );
+  // }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: buildAppBar(context),
+      appBar: buildAppBar(context: context, 
+      firstIcon: Icons.delete,
+       secondIcon: Icons.account_circle, 
+      firstButtonAction: (){
+        context.read<Cart>().clearCart();
+      }, 
+      secondButtonAction: (){
+         Navigator.of(context).push(MaterialPageRoute(
+                    builder: (context) => MyAccount(),
+                   ));
+
+      },),
       body: Consumer<Cart>(builder: (context, cart, child) {
         return cart.products.isEmpty ? emptycart() : cartItems();
       }),

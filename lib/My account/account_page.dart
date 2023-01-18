@@ -19,9 +19,9 @@ class MyAccount extends StatelessWidget {
       backgroundColor: Colors.white,
       elevation: 0,
       leading: IconButton(
-        icon: const Icon(
+        icon: Icon(
           Icons.arrow_back,
-          color: kTextColor,
+          color: Colors.orange[500],
         ),
         onPressed: () {
           Navigator.of(context).pop();
@@ -30,13 +30,14 @@ class MyAccount extends StatelessWidget {
       actions: <Widget>[
         IconButton(
           icon: const Icon(
-            Icons.home, size: 35,
+            Icons.home,
+            size: 35,
             color: Colors.orange,
           ),
           onPressed: () {
             Navigator.of(context).push(MaterialPageRoute(
-                    builder: (context) => MyHomePage(),
-                  ));
+              builder: (context) => MyHomePage(),
+            ));
           },
         ),
         const SizedBox(width: kDefaultPaddin / 2),
@@ -108,8 +109,6 @@ class MyAccount extends StatelessWidget {
     );
   }
 }
-
-
 
 class CardButton extends StatelessWidget {
   CardButton(

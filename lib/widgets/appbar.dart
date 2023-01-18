@@ -1,35 +1,45 @@
 import 'package:flutter/material.dart';
-import 'package:multiple_dropdown_firebase/shoppingcart/cart.dart';
 import '../constants.dart';
 
-AppBar buildAppBar(BuildContext context) {
-    return AppBar(
-      backgroundColor: Colors.white,
-      elevation: 0,
-      leading: IconButton(
-        icon: const Icon(Icons.arrow_back, color: kTextColor,),
-        onPressed: () {
-          Navigator.pop(context);
-        },
+AppBar buildAppBar({
+  required BuildContext context,
+  required IconData firstIcon,
+  required IconData secondIcon,
+  required void Function() firstButtonAction,
+  required void Function() secondButtonAction,
+}) {
+  return AppBar(
+    backgroundColor: Colors.white,
+    elevation: 0,
+    leading: IconButton(
+      icon:  Icon(
+        Icons.arrow_back,
+        color: Colors.orange[500],
       ),
-      actions: <Widget>[
-        IconButton(
-          icon:const Icon(Icons.search, color: kTextColor,),
-          
-          
-          onPressed: () { },
+      onPressed: () {
+        Navigator.pop(context);
+      },
+    ),
+    actions: <Widget>[
+      IconButton(
+        icon: Icon(
+          firstIcon,
+          color: Colors.orange[500],
         ),
-        IconButton(
-          icon: const Icon(Icons.shopping_cart, color: kTextColor,),
-          
-          onPressed: () {
-             Navigator.of(context).push(MaterialPageRoute(
-                    builder: (context) => CartView(),
-                  ));
-          },
+        onPressed: firstButtonAction,
+      ),
+      IconButton(
+        icon: Icon(
+          secondIcon,
+          color: Colors.orange[500],
         ),
-        const SizedBox(width: kDefaultPaddin / 2),
-      ],
-    );
-  }
-  
+        onPressed: secondButtonAction,
+      ),
+      const SizedBox(width: kDefaultPaddin / 2),
+    ],
+  );
+}
+
+AppBar buldbar({required IconData icon}) {
+  return AppBar();
+}

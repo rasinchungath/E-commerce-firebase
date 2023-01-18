@@ -4,6 +4,7 @@ import 'package:multiple_dropdown_firebase/My%20account/account_page.dart';
 import 'package:multiple_dropdown_firebase/constants.dart';
 import 'package:multiple_dropdown_firebase/productview.dart';
 import 'package:multiple_dropdown_firebase/shoppingcart/cart.dart';
+import 'package:multiple_dropdown_firebase/widgets/appbar.dart';
 
 class MyHomePage extends StatefulWidget {
   @override
@@ -18,45 +19,27 @@ class _MyHomePageState extends State<MyHomePage> {
   void initState() {
     super.initState();
   }
-  AppBar buildAppBar(BuildContext context) {
-    return AppBar(
-      backgroundColor: Colors.white,
-      elevation: 0,
-      leading: IconButton(
-        icon: const Icon(Icons.arrow_back, color: kTextColor,),
-        onPressed: () {},
-      ),
-      actions: <Widget>[
-        IconButton(
-          icon:const Icon(Icons.account_circle, color: kTextColor,),
-          
-          
-          onPressed: () { 
-             Navigator.of(context).push(MaterialPageRoute(
-                    builder: (context) => MyAccount(),
-                  ));
-          },
-        ),
-        IconButton(
-          icon: const Icon(Icons.shopping_cart, color: kTextColor,),
-          
-          onPressed: () {
-             Navigator.of(context).push(MaterialPageRoute(
-                    builder: (context) => CartView(),
-                  ));
-          },
-        ),
-        const SizedBox(width: kDefaultPaddin / 2),
-      ],
-    );
-  }
-
+  
   @override
   Widget build(BuildContext context) {
     debugPrint('category: $category');
     debugPrint('selected item: $category_item');
     return Scaffold(
-      appBar: buildAppBar(context),
+      appBar: buildAppBar(
+        context: context,
+        firstIcon: Icons.account_circle,
+        secondIcon: Icons.shopping_cart,
+        firstButtonAction: () {
+          Navigator.of(context).push(MaterialPageRoute(
+            builder: (context) => MyAccount(),
+          ));
+        },
+        secondButtonAction: () {
+          Navigator.of(context).push(MaterialPageRoute(
+            builder: (context) => CartView(),
+          ));
+        },
+      ),
       body: Center(
         child: Column(
           children: [
@@ -155,7 +138,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   )
                 : Container(),
             Expanded(
-              child: ItemView( company: category_item),
+              child: ItemView(company: category_item),
             )
           ],
         ),
