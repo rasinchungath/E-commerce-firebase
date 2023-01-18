@@ -230,8 +230,8 @@ class MyOrders extends StatelessWidget {
               }),
             );
           } else {
-            return Center(
-              child: Text('data'),
+            return const Center(
+              child: CircularProgressIndicator(),
             );
           }
         },
