@@ -2,6 +2,7 @@ import 'dart:developer';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:multiple_dropdown_firebase/model/product_class.dart';
+import 'package:multiple_dropdown_firebase/widgets/radiolist.dart';
 import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';
 import 'dart:convert';
@@ -24,6 +25,7 @@ class PaymentPage extends StatefulWidget {
 class _PaymentPageState extends State<PaymentPage> {
   Cart cart = Cart();
   int deliverycharge = 40;
+  PaymentMethod method = PaymentMethod.cashondelivery;
   final _razorpay = Razorpay();
 
   @override
@@ -38,13 +40,13 @@ class _PaymentPageState extends State<PaymentPage> {
 
   void _handlePaymentSuccess(PaymentSuccessResponse response) {
     // Do something when payment succeeds
-   
+
     verifySignature(
       signature: response.signature,
       paymentId: response.paymentId,
       orderId: response.orderId,
     );
-     log("successs id===" + response.paymentId.toString());
+    log("successs id===" + response.paymentId.toString());
     firebaseData('order successfull');
   }
 
@@ -108,7 +110,7 @@ class _PaymentPageState extends State<PaymentPage> {
       },
       'retry': {'enabled': true, 'max_count': 1},
       'send_sms_hash': true,
-      "prefill": {"contact": "9633970499", "email": "dilajbar123@gmail.com"},
+      "prefill": {"contact": "9633970499", "email": "rasincrazz@gmail.com"},
     };
     try {
       _razorpay.open(options);
@@ -197,8 +199,6 @@ class _PaymentPageState extends State<PaymentPage> {
     );
   }
 
-  PaymentMethod method = PaymentMethod.cashondelivery;
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -282,69 +282,53 @@ class _PaymentPageState extends State<PaymentPage> {
               child: Container(
                 child: Column(
                   children: [
-                    ListTile(
-                      title: const Text('Cash on delivery'),
-                      leading: Radio(
-                        fillColor: MaterialStateColor.resolveWith(
-                            (states) => Colors.orange.shade500),
-                        value: PaymentMethod.cashondelivery,
-                        groupValue: method,
-                        onChanged: (PaymentMethod? value) {
-                          setState(() {
-                            method = value!;
-                            log(value.toString());
-                          });
-                        },
-                      ),
-                      subtitle: const Text('Pay at the time of delivery'),
+                    radioList(
+                      selected: (PaymentMethod? value) {
+                        setState(() {
+                          method = value!;
+                          log(value.toString());
+                        });
+                      },
+                      tiTle: 'Cash on delivery',
+                      text: 'Pay at the time of delivery',
+                      value: PaymentMethod.cashondelivery,
+                      method: method,
                     ),
-                    ListTile(
-                      title: const Text('Online payment'),
-                      leading: Radio(
-                        fillColor: MaterialStateColor.resolveWith(
-                            (states) => Colors.orange.shade500),
-                        value: PaymentMethod.online,
-                        groupValue: method,
-                        onChanged: (PaymentMethod? value) {
-                          setState(() {
-                            method = value!;
-                            log(value.toString());
-                          });
-                        },
-                      ),
-                      subtitle: const Text('Visa / Master Card / Rupay'),
+                    radioList(
+                      selected: (PaymentMethod? value) {
+                        setState(() {
+                          method = value!;
+                          log(value.toString());
+                        });
+                      },
+                      tiTle: 'Online payment',
+                      text: 'Visa / Master Card / Rupay',
+                      value: PaymentMethod.online,
+                      method: method,
                     ),
-                    ListTile(
-                      title: const Text('Pay using UPI'),
-                      leading: Radio(
-                        fillColor: MaterialStateColor.resolveWith(
-                            (states) => Colors.orange.shade500),
-                        value: PaymentMethod.upi,
-                        groupValue: method,
-                        onChanged: (PaymentMethod? value) {
-                          // setState(() {
-                          //   method = value!;
-                          //   log(value.toString());
-                          // });
-                        },
-                      ),
-                      subtitle: const Text('Currently unavailable'),
+                    radioList(
+                      selected: (PaymentMethod? value) {
+                        // setState(() {
+                        //   method = value!;
+                        //   log(value.toString());
+                        // });
+                      },
+                      tiTle: 'Pay using UPI',
+                      text: 'Currently unavailable',
+                      value: PaymentMethod.upi,
+                      method: method,
                     ),
-                    ListTile(
-                      title: const Text('Pay using Wallet'),
-                      leading: Radio(
-                        fillColor: MaterialStateColor.resolveWith(
-                            (states) => Colors.orange.shade500),
-                        value: PaymentMethod.wallet,
-                        groupValue: method,
-                        onChanged: (PaymentMethod? value) {
-                          // setState(() {
-                          //   method = value!;
-                          //   log(value.toString());
-                          // });
-                        },
-                      ),
-                      subtitle: const Text('Currently unavailable'),
+                    radioList(
+                      selected: (PaymentMethod? value) {
+                        // setState(() {
+                        //   method = value!;
+                        //   log(value.toString());
+                        // });
+                      },
+                      tiTle: 'Pay using Wallet',
+                      text: 'Currently unavailable',
+                      value: PaymentMethod.wallet,
+                      method: method,
                     ),
                   ],
                 ),
@@ -405,7 +389,6 @@ class _PaymentPageState extends State<PaymentPage> {
   }
 
   firebaseData(String paymentStatus) {
-    
     String payMethod =
         (method == PaymentMethod.online) ? 'online' : 'cash on delivery';
 

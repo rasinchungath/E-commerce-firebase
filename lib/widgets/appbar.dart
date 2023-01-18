@@ -12,7 +12,7 @@ AppBar buildAppBar({
     backgroundColor: Colors.white,
     elevation: 0,
     leading: IconButton(
-      icon:  Icon(
+      icon: Icon(
         Icons.arrow_back,
         color: Colors.orange[500],
       ),
@@ -38,8 +38,4 @@ AppBar buildAppBar({
       const SizedBox(width: kDefaultPaddin / 2),
     ],
   );
-}
-
-AppBar buldbar({required IconData icon}) {
-  return AppBar();
 }

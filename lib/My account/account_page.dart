@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
+import 'package:multiple_dropdown_firebase/My%20account/myorders.dart';
 import 'package:multiple_dropdown_firebase/constants.dart';
 import 'package:multiple_dropdown_firebase/homescreen.dart';
 
@@ -82,7 +83,11 @@ class MyAccount extends StatelessWidget {
             sizedbox,
             CardButton(
               text: 'My Orders',
-              buttonAction: () {},
+              buttonAction: () {
+                Navigator.of(context).push(MaterialPageRoute(
+                  builder: (context) => MyOrders(),
+                ));
+              },
               icon: Icons.shopping_cart,
             ),
             sizedbox,

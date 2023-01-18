@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:multiple_dropdown_firebase/My%20account/account_page.dart';
-import 'package:multiple_dropdown_firebase/constants.dart';
 import 'package:multiple_dropdown_firebase/productview.dart';
 import 'package:multiple_dropdown_firebase/shoppingcart/cart.dart';
 import 'package:multiple_dropdown_firebase/widgets/appbar.dart';
@@ -19,7 +18,7 @@ class _MyHomePageState extends State<MyHomePage> {
   void initState() {
     super.initState();
   }
-  
+
   @override
   Widget build(BuildContext context) {
     debugPrint('category: $category');
